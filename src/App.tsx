@@ -1,7 +1,11 @@
+import BookingForm from "./components/BookingForm"
+
 function App() {
   return (
     <>
-      <h1>easy booker</h1>
+      <h1>Easy Booker</h1>
+
+      <BookingForm />
     </>
   )
 }
