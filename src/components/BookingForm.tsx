@@ -1,12 +1,17 @@
 import React, { useState } from 'react'
+import { useData } from '../DataProvider'
 import styled from 'styled-components'
+import localForage from 'localforage'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.min.css'
 
+import { Booking } from '../types'
+
 export default function BookingForm() {
-  const [place, setPlace] = useState<number>(0)
+  const [placeId, setPlaceId] = useState<number>(0)
   const [checkInDate, setCheckInDate] = useState(new Date())
   const [checkOutDate, setCheckOutDate] = useState(new Date())
+  const { setData } = useData()!
 
   const placesOptions = [
     { id: 1, title: 'Crystal Cove Hotel' },
@@ -21,10 +26,15 @@ export default function BookingForm() {
     { id: 10, title: 'Velvet Retreat' }
   ]
 
-  const handleSubmit = (ev: React.SyntheticEvent) => {
+  const handleSubmit = async (ev: React.SyntheticEvent) => {
     ev.preventDefault()
 
-    console.log(place, checkInDate, checkOutDate)
+    let bookings: Booking[] | null = await localForage.getItem('bookings')
+    if (!bookings) bookings = []
+
+    bookings.push({ placeId, checkInDate, checkOutDate })
+    await localForage.setItem('bookings', bookings)
+    setData(bookings)
   }
 
   return (
@@ -36,10 +46,10 @@ export default function BookingForm() {
 
         <select
           onChange={(ev) => {
-            setPlace(parseInt(ev.target.value, 10))
+            setPlaceId(parseInt(ev.target.value, 10))
           }}
         >
-          {place === 0 && (<option>- Please select -</option>)}
+          {placeId === 0 && (<option>- Please select -</option>)}
 
           {placesOptions.map(place =>
             <option
