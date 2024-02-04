@@ -6,13 +6,26 @@ import DatePicker from 'react-datepicker'
 import { availablePlaces, saveBooking } from '../data-manager'
 import 'react-datepicker/dist/react-datepicker.min.css'
 
-
 export default function BookingForm() {
   const [placeId, setPlaceId] = useState<number>(0)
   const [checkInDate, setCheckInDate] = useState<Date | null>(null)
   const [checkOutDate, setCheckOutDate] = useState<Date | null>(null)
+  const [intervalLock, setIntervalLock] = useState<{ start: Date; end: Date; } | null>(null)
   const [price, setPrice] = useState<string>('-')
-  const { setData } = useData()!
+  const [excludeDateIntervals, setExcludeDateIntervals] = useState<{ start: Date; end: Date; }[]>([])
+  const { data, setData } = useData()!
+
+  useEffect(() => {
+    const intervals: { start: Date; end: Date; }[] = []
+    data.forEach(booking => intervals.push({ start: booking.checkInDate, end: booking.checkOutDate }))
+    intervals.sort((a, b) => {
+      if (a.start.getTime() === b.start.getTime()) {
+        return a.end.getTime() < b.end.getTime() ? -1 : 1
+      }
+      return a.start.getTime() < a.start.getTime() ? -1 : 1
+    })
+    setExcludeDateIntervals(intervals)
+  }, [data])
 
   useEffect(() => {
     if (placeId === 0 || !checkInDate || !checkOutDate) return setPrice('-')
@@ -27,6 +40,14 @@ export default function BookingForm() {
 
     setPrice(priceText + priceDetails)
   }, [placeId, checkInDate, checkOutDate])
+
+  useEffect(() => {
+    if (!checkInDate) return setIntervalLock(null)
+
+    const lock = excludeDateIntervals.find(interval => interval.start.getTime() > checkInDate.getTime())
+    setIntervalLock(lock || null)
+
+  }, [checkInDate])
 
   const handleSubmit = async (ev: React.SyntheticEvent) => {
     ev.preventDefault()
@@ -75,6 +96,7 @@ export default function BookingForm() {
           startDate={checkInDate}
           endDate={checkOutDate}
           minDate={new Date()}
+          excludeDateIntervals={excludeDateIntervals}
           placeholderText='- Please select -'
         />
       </FormField>
@@ -90,6 +112,8 @@ export default function BookingForm() {
           startDate={moment(checkInDate).add(1, 'days').toDate()}
           endDate={checkOutDate}
           minDate={moment(checkInDate).add(1, 'days').toDate()}
+          maxDate={intervalLock?.start || null}
+          excludeDateIntervals={excludeDateIntervals}
           placeholderText='- Please select -'
         />
       </FormField>
