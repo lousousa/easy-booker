@@ -61,20 +61,32 @@ export default function BookingForm() {
         />
       </FormField>
 
-      <button
-        type="submit"
-      >
-        Save
-      </button>
+      <div>
+        <button
+          type="submit"
+        >
+          Save
+        </button>
+      </div>
     </Form>
   )
 }
 
 const Form = styled.form`
   display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 48px;
+  gap: 24px;
 `
 
 const FormField = styled.div`
   display: grid;
   grid-template-columns: 1fr;
+  flex: 1;
+
+  input {
+    width: 100%;
+  }
 `
