@@ -21,7 +21,7 @@ const Content = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  max-width: 720px;
+  max-width: 1200px;
   margin: 0 auto;
 
   h1 {

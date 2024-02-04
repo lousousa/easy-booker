@@ -11,6 +11,21 @@ export default function BookingList() {
     if (bookings) setData(bookings)
   }
 
+  const getPriceText = (id: string) => {
+    const booking = data.find(booking => booking.id === id)
+    if (!booking) return ''
+
+    const place = availablePlaces.find(place => place.id === booking.placeId)
+    if (!place) return ''
+
+    const differenceInDays = moment(booking.checkOutDate).diff(moment(booking.checkInDate), 'days')
+
+    const priceText = `$${place.pricePerNight * differenceInDays}`
+    const priceDetails = differenceInDays > 1 ? ` ($${place.pricePerNight} x ${differenceInDays} nights)` : ' (1 night)'
+
+    return priceText + priceDetails
+  }
+
   return (
     <Content>
       <h2>My bookings</h2>
@@ -25,6 +40,7 @@ export default function BookingList() {
             <div>Where</div>
             <div>Check-in</div>
             <div>Check-out</div>
+            <div>Price</div>
             <div>Manage</div>
           </DataGrid>
         )}
@@ -34,6 +50,7 @@ export default function BookingList() {
             <div>{availablePlaces.find(place => place.id === booking.placeId)?.title}</div>
             <div>{moment(booking.checkInDate).format('MM/DD/YYYY')}</div>
             <div>{moment(booking.checkOutDate).format('MM/DD/YYYY')}</div>
+            <div>{getPriceText(booking.id)}</div>
             <div className="-is-action-group">
               <a
                 onClick={() => removeItem(booking.id)}
@@ -72,7 +89,7 @@ const ListContainer = styled.div`
 `
 const DataGrid = styled.div`
   display: grid;
-  grid-template-columns: 2fr repeat(2, 1.5fr) 2fr;
+  grid-template-columns: 2fr 1.5fr 1.5fr 2fr 2fr;
 
   &.-is-header {
     font-weight: 600;

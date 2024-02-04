@@ -36,7 +36,7 @@ export default function BookingForm() {
     const differenceInDays = moment(checkOutDate).diff(moment(checkInDate), 'days')
 
     const priceText = `$${place.pricePerNight * differenceInDays}`
-    const priceDetails = differenceInDays > 1 ? ` ($${place.pricePerNight} x ${differenceInDays} nights)` : ''
+    const priceDetails = differenceInDays > 1 ? ` ($${place.pricePerNight} x ${differenceInDays} nights)` : ' (1 night)'
 
     setPrice(priceText + priceDetails)
   }, [placeId, checkInDate, checkOutDate])
