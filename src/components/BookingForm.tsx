@@ -56,6 +56,10 @@ export default function BookingForm() {
 
     const bookings = await saveBooking(placeId, checkInDate, checkOutDate)
     if (bookings) setData(bookings)
+
+    setPlaceId(0)
+    setCheckInDate(null)
+    setCheckOutDate(null)
   }
 
   return (
@@ -69,6 +73,7 @@ export default function BookingForm() {
           onChange={(ev) => {
             setPlaceId(parseInt(ev.target.value, 10))
           }}
+          value={placeId}
         >
           {placeId === 0 && (<option>- Please select -</option>)}
 
