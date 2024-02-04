@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useData } from './DataProvider'
 import styled from 'styled-components'
+import moment from 'moment'
 import DatePicker from 'react-datepicker'
 import { availablePlaces, saveBooking } from '../data-manager'
 import 'react-datepicker/dist/react-datepicker.min.css'
@@ -8,12 +9,30 @@ import 'react-datepicker/dist/react-datepicker.min.css'
 
 export default function BookingForm() {
   const [placeId, setPlaceId] = useState<number>(0)
-  const [checkInDate, setCheckInDate] = useState(new Date())
-  const [checkOutDate, setCheckOutDate] = useState(new Date())
+  const [checkInDate, setCheckInDate] = useState<Date | null>(null)
+  const [checkOutDate, setCheckOutDate] = useState<Date | null>(null)
+  const [price, setPrice] = useState<string>('-')
   const { setData } = useData()!
+
+  useEffect(() => {
+    if (placeId === 0 || !checkInDate || !checkOutDate) return setPrice('-')
+
+    const place = availablePlaces.find(place => place.id === placeId)
+    if (!place?.pricePerNight) return setPrice('-')
+
+    const differenceInDays = moment(checkOutDate).diff(moment(checkInDate), 'days')
+
+    const priceText = `$${place.pricePerNight * differenceInDays}`
+    const priceDetails = differenceInDays > 1 ? ` ($${place.pricePerNight} x ${differenceInDays} nights)` : ''
+
+    setPrice(priceText + priceDetails)
+  }, [placeId, checkInDate, checkOutDate])
 
   const handleSubmit = async (ev: React.SyntheticEvent) => {
     ev.preventDefault()
+
+    if (!checkInDate || !checkOutDate || placeId === 0) return
+
     const bookings = await saveBooking(placeId, checkInDate, checkOutDate)
     if (bookings) setData(bookings)
   }
@@ -37,7 +56,7 @@ export default function BookingForm() {
               key={'place_' + place.id}
               value={place.id}
             >
-              {place.title}
+              {place.title} - ${place.pricePerNight} night
             </option>
           )}
         </select>
@@ -48,7 +67,15 @@ export default function BookingForm() {
 
         <DatePicker
           selected={checkInDate}
-          onChange={(date: Date) => setCheckInDate(date)}
+          onChange={(date: Date) => {
+            setCheckOutDate(null)
+            setCheckInDate(date)
+          }}
+          selectsStart
+          startDate={checkInDate}
+          endDate={checkOutDate}
+          minDate={new Date()}
+          placeholderText='- Please select -'
         />
       </FormField>
 
@@ -56,26 +83,41 @@ export default function BookingForm() {
         <label>Check-out</label>
 
         <DatePicker
+          disabled={!checkInDate}
           selected={checkOutDate}
           onChange={(date: Date) => setCheckOutDate(date)}
+          selectsEnd
+          startDate={moment(checkInDate).add(1, 'days').toDate()}
+          endDate={checkOutDate}
+          minDate={moment(checkInDate).add(1, 'days').toDate()}
+          placeholderText='- Please select -'
         />
       </FormField>
 
+      <div />
+
+      <FormField>
+        <label>Price</label>
+
+        <p>{price}</p>
+      </FormField>
+
       <div>
-        <button
+        <SubmitButton
           type="submit"
+          disabled={price === '-'}
         >
           Save
-        </button>
+        </SubmitButton>
       </div>
     </Form>
   )
 }
 
 const Form = styled.form`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1.25fr repeat(2, 1fr);
+  align-items: end;
   width: 100%;
   margin-top: 48px;
   gap: 24px;
@@ -86,7 +128,21 @@ const FormField = styled.div`
   grid-template-columns: 1fr;
   flex: 1;
 
-  input {
+  input, select, p {
     width: 100%;
+    margin-top: 4px;
+    font-size: 16px;
+    padding: 4px 0;
   }
+
+  input, select {
+    padding: 4px 8px;
+  }
+`
+
+const SubmitButton = styled.button`
+  padding: 4px 8px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
 `
