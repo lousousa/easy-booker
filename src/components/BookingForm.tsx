@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useData } from '../DataProvider'
+import { useData } from './DataProvider'
 import styled from 'styled-components'
 import DatePicker from 'react-datepicker'
 import { availablePlaces, saveBooking } from '../data-manager'

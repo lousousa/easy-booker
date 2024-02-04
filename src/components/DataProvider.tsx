@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext, createContext } from 'react'
 import localForage from 'localforage'
 
-import { Booking, DataContext, DataProviderProps } from './types'
+import { Booking, DataContext, DataProviderProps } from '../types'
 
 const DataContext = createContext<DataContext | null>(null)
 

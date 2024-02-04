@@ -1,4 +1,4 @@
-import { DataProvider } from './DataProvider'
+import { DataProvider } from './components/DataProvider'
 import BookingForm from './components/BookingForm'
 import BookingList from './components/BookingList'
 

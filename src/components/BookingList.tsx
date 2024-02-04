@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { useData } from '../DataProvider'
+import { useData } from './DataProvider'
 import { availablePlaces, removeBooking } from '../data-manager'
 
 export default function BookingList() {
