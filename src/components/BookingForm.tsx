@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import { useData } from '../DataProvider'
 import styled from 'styled-components'
-import localForage from 'localforage'
 import DatePicker from 'react-datepicker'
-import { availablePlaces } from '../DataProvider'
+import { availablePlaces, saveBooking } from '../data-manager'
 import 'react-datepicker/dist/react-datepicker.min.css'
 
-import { Booking } from '../types'
 
 export default function BookingForm() {
   const [placeId, setPlaceId] = useState<number>(0)
@@ -16,13 +14,8 @@ export default function BookingForm() {
 
   const handleSubmit = async (ev: React.SyntheticEvent) => {
     ev.preventDefault()
-
-    let bookings: Booking[] | null = await localForage.getItem('bookings')
-    if (!bookings) bookings = []
-
-    bookings.push({ placeId, checkInDate, checkOutDate })
-    await localForage.setItem('bookings', bookings)
-    setData(bookings)
+    const bookings = await saveBooking(placeId, checkInDate, checkOutDate)
+    if (bookings) setData(bookings)
   }
 
   return (

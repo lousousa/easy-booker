@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 
 export interface Booking {
+  id: string;
   placeId: number;
   checkInDate: Date;
   checkOutDate: Date
