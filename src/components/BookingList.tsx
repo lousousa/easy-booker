@@ -8,11 +8,14 @@ import BookingForm from './BookingForm'
 
 export default function BookingList() {
   const [bookingDetailsId, setBookingDetailsId] = useState<string | null>(null)
+  const [removingId, setRemovingId] = useState<string | null>(null)
   const { data, setData } = useData()!
 
-  const removeItem = async (id: string) => {
-    const bookings = await removeBooking(id)
+  const removeItem = async () => {
+    const bookings = await removeBooking(removingId!)
     if (bookings) setData(bookings)
+
+    setRemovingId(null)
   }
 
   const getPriceText = (id: string) => {
@@ -44,6 +47,20 @@ export default function BookingList() {
         />
       </Modal>
 
+      <Modal
+        isOpen={removingId !== null}
+        onClose={() => setRemovingId(null)}
+      >
+        <ConfirmationModalContainer>
+          <h3>Are you sure?</h3>
+
+          <div>
+            <RemoveButton onClick={() => removeItem()}>Remove</RemoveButton>
+            <CancelButton onClick={() => setRemovingId(null)}>Cancel</CancelButton>
+          </div>
+        </ConfirmationModalContainer>
+      </Modal>
+
       {data.length > 0 && (
         <>
           <TextTitle>My bookings</TextTitle>
@@ -60,7 +77,7 @@ export default function BookingList() {
                 <ActionGroup>
                   <a onClick={() => setBookingDetailsId(booking.id)}>Edit</a>
 
-                  <a className='-is-danger' onClick={() => removeItem(booking.id)}>Remove</a>
+                  <a className='-is-danger' onClick={() => setRemovingId(booking.id)}>Remove</a>
                 </ActionGroup>
               </DataGrid>
             ))}
@@ -124,5 +141,55 @@ const ActionGroup = styled.div`
   a {
     text-align: center;
     cursor: pointer;
+  }
+`
+
+const ConfirmationModalContainer = styled.div`
+  width: 360px;
+  max-width: 100%;
+  height: 170px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  > h3 {
+    margin-bottom: 24px;
+  }
+
+  > div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  button {
+    cursor: pointer;
+    padding: 8px 24px;
+    font-size: 16px;
+    border-radius: 16px;
+    font-weight: 600;
+  }
+`
+const RemoveButton = styled.button`
+  border: 1px solid #dd2d4a;
+  color: #dd2d4a;
+  background: none;
+
+  &:hover {
+    background-color: #dd2d4a;
+    color: #fff;
+  }
+`
+
+const CancelButton = styled.button`
+  border: 1px solid #999;
+  color: #999;
+  background: none;
+
+  &:hover {
+    background-color: #999;
+    color: #fff;
   }
 `
