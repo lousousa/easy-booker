@@ -15,3 +15,13 @@ export interface DataContext {
 export interface DataProviderProps {
   children: ReactNode
 }
+
+export interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: ReactNode
+}
+
+export interface BookingDetailsProps {
+  id: string;
+}

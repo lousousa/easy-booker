@@ -1,9 +1,13 @@
 import moment from 'moment'
+import { useState } from 'react'
 import { useData } from './DataProvider'
 import { availablePlaces, removeBooking } from '../data-manager'
 import styled from 'styled-components'
+import Modal from './Modal'
+import BookingDetails from './BookingDetails'
 
 export default function BookingList() {
+  const [bookingDetailsId, setBookingDetailsId] = useState<string | null>(null)
   const { data, setData } = useData()!
 
   const removeItem = async (id: string) => {
@@ -28,6 +32,13 @@ export default function BookingList() {
 
   return (
     <Content>
+      <Modal
+        isOpen={bookingDetailsId !== null}
+        onClose={() => setBookingDetailsId(null)}
+      >
+        <BookingDetails id={bookingDetailsId!} />
+      </Modal>
+
       <h2>My bookings</h2>
 
       <ListContainer className={`${data.length > 0 && '-has-data'}`}>
@@ -52,13 +63,9 @@ export default function BookingList() {
             <div>{moment(booking.checkOutDate).format('MM/DD/YYYY')}</div>
             <div>{getPriceText(booking.id)}</div>
             <div className="-is-action-group">
-              <a
-                onClick={() => removeItem(booking.id)}
-              >
-                Remove
-              </a>
+              <a onClick={() => removeItem(booking.id)}>Remove</a>
 
-              <a>Update</a>
+              <a onClick={() => setBookingDetailsId(booking.id)}>Update</a>
             </div>
           </DataGrid>
         ))}
