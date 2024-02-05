@@ -24,4 +24,10 @@ export interface ModalProps {
 
 export interface BookingDetailsProps {
   id: string;
+  onSave?: () => void;
+}
+
+export interface BookingFormProps {
+  bookingId?: string;
+  onSave?: () => void;
 }

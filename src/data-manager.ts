@@ -15,14 +15,18 @@ export const availablePlaces = [
   { id: 10, title: 'Velvet Retreat', pricePerNight: 520 }
 ]
 
-export const saveBooking = async (placeId: number, checkInDate: Date, checkOutDate: Date) => {
-  const bookings: Booking[] | null = await localForage.getItem('bookings')
+export const saveBooking = async (id: string | undefined, placeId: number, checkInDate: Date, checkOutDate: Date) => {
+  let bookings: Booking[] | null = await localForage.getItem('bookings')
   if (!bookings) return
 
-  const timestamp = new Date().getTime()
-  const id = timestamp.toString(36) + Math.random().toString(36)
+  if (!id) {
+    const timestamp = new Date().getTime()
+    id = timestamp.toString(36) + Math.random().toString(36)
+  }
 
+  bookings = bookings.filter(booking => booking.id !== id)
   bookings.push({ id, placeId, checkInDate, checkOutDate })
+
   await localForage.setItem('bookings', bookings)
 
   return bookings

@@ -4,7 +4,7 @@ import { useData } from './DataProvider'
 import { availablePlaces, removeBooking } from '../data-manager'
 import styled from 'styled-components'
 import Modal from './Modal'
-import BookingDetails from './BookingDetails'
+import BookingForm from './BookingForm'
 
 export default function BookingList() {
   const [bookingDetailsId, setBookingDetailsId] = useState<string | null>(null)
@@ -36,7 +36,12 @@ export default function BookingList() {
         isOpen={bookingDetailsId !== null}
         onClose={() => setBookingDetailsId(null)}
       >
-        <BookingDetails id={bookingDetailsId!} />
+        <h2>Edit booking</h2>
+
+        <BookingForm
+          bookingId={bookingDetailsId!}
+          onSave={() => setBookingDetailsId(null)}
+        />
       </Modal>
 
       <h2>My bookings</h2>
@@ -63,9 +68,9 @@ export default function BookingList() {
             <div>{moment(booking.checkOutDate).format('MM/DD/YYYY')}</div>
             <div>{getPriceText(booking.id)}</div>
             <div className="-is-action-group">
-              <a onClick={() => removeItem(booking.id)}>Remove</a>
+              <a onClick={() => setBookingDetailsId(booking.id)}>Edit</a>
 
-              <a onClick={() => setBookingDetailsId(booking.id)}>Update</a>
+              <a onClick={() => removeItem(booking.id)}>Remove</a>
             </div>
           </DataGrid>
         ))}

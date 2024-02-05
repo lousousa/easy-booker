@@ -4,9 +4,10 @@ import styled from 'styled-components'
 import moment from 'moment'
 import DatePicker from 'react-datepicker'
 import { availablePlaces, saveBooking } from '../data-manager'
+import { BookingFormProps } from '../types'
 import 'react-datepicker/dist/react-datepicker.min.css'
 
-export default function BookingForm() {
+export default function BookingForm({ bookingId, onSave }: BookingFormProps) {
   const [placeId, setPlaceId] = useState<number>(0)
   const [checkInDate, setCheckInDate] = useState<Date | null>(null)
   const [checkOutDate, setCheckOutDate] = useState<Date | null>(null)
@@ -16,14 +17,31 @@ export default function BookingForm() {
   const { data, setData } = useData()!
 
   useEffect(() => {
+    if (!bookingId) return
+
+    const currentBooking = data.find(booking => booking.id === bookingId)
+    if (!currentBooking) return
+
+    setPlaceId(currentBooking.placeId)
+    setCheckInDate(currentBooking.checkInDate)
+    setCheckOutDate(currentBooking.checkOutDate)
+  }, [])
+
+  useEffect(() => {
     const intervals: { start: Date; end: Date; }[] = []
-    data.forEach(booking => intervals.push({ start: booking.checkInDate, end: booking.checkOutDate }))
+
+    data.forEach(booking => {
+      if (booking.id !== bookingId)
+        intervals.push({ start: booking.checkInDate, end: booking.checkOutDate })
+    })
+
     intervals.sort((a, b) => {
       if (a.start.getTime() === b.start.getTime()) {
         return a.end.getTime() < b.end.getTime() ? -1 : 1
       }
       return a.start.getTime() < a.start.getTime() ? -1 : 1
     })
+
     setExcludeDateIntervals(intervals)
   }, [data])
 
@@ -54,12 +72,14 @@ export default function BookingForm() {
 
     if (!checkInDate || !checkOutDate || placeId === 0) return
 
-    const bookings = await saveBooking(placeId, checkInDate, checkOutDate)
+    const bookings = await saveBooking(bookingId, placeId, checkInDate, checkOutDate)
     if (bookings) setData(bookings)
 
     setPlaceId(0)
     setCheckInDate(null)
     setCheckOutDate(null)
+
+    if (onSave) onSave()
   }
 
   return (
