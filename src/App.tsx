@@ -27,7 +27,7 @@ const Content = styled.div`
   h1 {
     width: 100%;
     text-align: center;
-    margin-top: 48px;
+    margin: 48px 0;
   }
 `
 

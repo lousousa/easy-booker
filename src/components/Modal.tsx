@@ -9,7 +9,7 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
   return ReactDOM.createPortal(
     <ModalOverlay>
       <ModalContent>
-        <button onClick={onClose}>Close</button>
+        <ButtonClose onClick={onClose}>Close</ButtonClose>
 
         {children}
       </ModalContent>
@@ -32,4 +32,11 @@ const ModalContent = styled.div`
   padding: 24px;
   border-radius: 4px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, .1);
+  position: relative;
+`
+
+const ButtonClose = styled.a`
+  position: absolute;
+  right: 24px;
+  cursor: pointer;
 `

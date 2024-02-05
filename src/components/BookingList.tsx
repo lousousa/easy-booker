@@ -24,10 +24,7 @@ export default function BookingList() {
 
     const differenceInDays = moment(booking.checkOutDate).diff(moment(booking.checkInDate), 'days')
 
-    const priceText = `$${place.pricePerNight * differenceInDays}`
-    const priceDetails = differenceInDays > 1 ? ` ($${place.pricePerNight} x ${differenceInDays} nights)` : ' (1 night)'
-
-    return priceText + priceDetails
+    return `$${place.pricePerNight * differenceInDays}`
   }
 
   return (
@@ -36,7 +33,7 @@ export default function BookingList() {
         isOpen={bookingDetailsId !== null}
         onClose={() => setBookingDetailsId(null)}
       >
-        <h2>Edit booking</h2>
+        <TextTitle>Edit booking</TextTitle>
 
         <BookingForm
           bookingId={bookingDetailsId!}
@@ -44,7 +41,7 @@ export default function BookingList() {
         />
       </Modal>
 
-      <h2>My bookings</h2>
+      <TextTitle>My bookings</TextTitle>
 
       <ListContainer className={`${data.length > 0 && '-has-data'}`}>
         {data.length === 0 && (
@@ -82,14 +79,14 @@ export default function BookingList() {
 const Content = styled.div`
   margin-top: 48px;
   width: 100%;
-
-  h2 {
-    text-align: center;
-  }
 `
-const ListContainer = styled.div`
-  margin-top: 24px;
 
+const TextTitle = styled.h2`
+  text-align: center;
+  margin-bottom: 24px;
+`
+
+const ListContainer = styled.div`
   &.-has-data {
     border-bottom: 1px solid #bbb;
     border-right: 1px solid #bbb;

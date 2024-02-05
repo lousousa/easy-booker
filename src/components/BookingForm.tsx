@@ -64,7 +64,6 @@ export default function BookingForm({ bookingId, onSave }: BookingFormProps) {
 
     const lock = excludeDateIntervals.find(interval => interval.start.getTime() > checkInDate.getTime())
     setIntervalLock(lock || null)
-
   }, [checkInDate])
 
   const handleSubmit = async (ev: React.SyntheticEvent) => {
@@ -168,7 +167,6 @@ const Form = styled.form`
   grid-template-columns: 1.25fr repeat(2, 1fr);
   align-items: end;
   width: 100%;
-  margin-top: 48px;
   gap: 24px;
 `
 

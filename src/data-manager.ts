@@ -26,6 +26,7 @@ export const saveBooking = async (id: string | undefined, placeId: number, check
 
   bookings = bookings.filter(booking => booking.id !== id)
   bookings.push({ id, placeId, checkInDate, checkOutDate })
+  bookings.sort((a, b) => a.checkInDate.getTime() - b.checkInDate.getTime())
 
   await localForage.setItem('bookings', bookings)
 
