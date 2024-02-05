@@ -25,18 +25,20 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 12px;
 `
 
 const ModalContent = styled.div`
   background-color: #fff;
-  padding: 24px;
-  border-radius: 4px;
+  padding: 12px;
+  border-radius: 16px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, .1);
   position: relative;
 `
 
 const ButtonClose = styled.a`
   position: absolute;
-  right: 24px;
+  right: 12px;
+  top: 12px;
   cursor: pointer;
 `

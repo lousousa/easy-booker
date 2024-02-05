@@ -24,7 +24,10 @@ export default function BookingList() {
 
     const differenceInDays = moment(booking.checkOutDate).diff(moment(booking.checkInDate), 'days')
 
-    return `$${place.pricePerNight * differenceInDays}`
+    const priceText = `$${place.pricePerNight * differenceInDays}`
+    const priceDetails = differenceInDays > 1 ? `($${place.pricePerNight} x ${differenceInDays} nights)` : '(1 night)'
+
+    return [priceText, priceDetails]
   }
 
   return (
@@ -33,7 +36,7 @@ export default function BookingList() {
         isOpen={bookingDetailsId !== null}
         onClose={() => setBookingDetailsId(null)}
       >
-        <TextTitle>Edit booking</TextTitle>
+        <ModalTextTitle>Edit booking</ModalTextTitle>
 
         <BookingForm
           bookingId={bookingDetailsId!}
@@ -43,32 +46,24 @@ export default function BookingList() {
 
       <TextTitle>My bookings</TextTitle>
 
-      <ListContainer className={`${data.length > 0 && '-has-data'}`}>
+      <ListContainer>
         {data.length === 0 && (
-          <p>You currently have no bookings.</p>
-        )}
-
-        {data.length > 0 && (
-          <DataGrid className="-is-header">
-            <div>Where</div>
-            <div>Check-in</div>
-            <div>Check-out</div>
-            <div>Price</div>
-            <div>Manage</div>
-          </DataGrid>
+          <TextMessage>You currently have no bookings.</TextMessage>
         )}
 
         {data.map(booking => (
           <DataGrid key={'booking_item_' + booking.id}>
-            <div>{availablePlaces.find(place => place.id === booking.placeId)?.title}</div>
-            <div>{moment(booking.checkInDate).format('MM/DD/YYYY')}</div>
-            <div>{moment(booking.checkOutDate).format('MM/DD/YYYY')}</div>
-            <div>{getPriceText(booking.id)}</div>
-            <div className="-is-action-group">
+            <div>
+              <h2>{availablePlaces.find(place => place.id === booking.placeId)?.title}</h2>
+              <p>{moment(booking.checkInDate).format('MM/DD/YYYY')} - {moment(booking.checkOutDate).format('MM/DD/YYYY')}</p>
+              <p><b>{getPriceText(booking.id)[0]}</b> {getPriceText(booking.id)[1]}</p>
+            </div>
+
+            <ActionGroup>
               <a onClick={() => setBookingDetailsId(booking.id)}>Edit</a>
 
               <a onClick={() => removeItem(booking.id)}>Remove</a>
-            </div>
+            </ActionGroup>
           </DataGrid>
         ))}
       </ListContainer>
@@ -81,43 +76,57 @@ const Content = styled.div`
   width: 100%;
 `
 
-const TextTitle = styled.h2`
+const ModalTextTitle = styled.h2`
   text-align: center;
-  margin-bottom: 24px;
+  margin: 24px 0;
+`
+
+const TextTitle = styled.h2`
+text-align: center;
+margin-bottom: 48px;
+`
+
+const TextMessage = styled.p`
+  text-align: center;
 `
 
 const ListContainer = styled.div`
-  &.-has-data {
-    border-bottom: 1px solid #bbb;
-    border-right: 1px solid #bbb;
-  }
-
-  p {
-    text-align: center;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 `
+
 const DataGrid = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1.5fr 1.5fr 2fr 2fr;
+  grid-template-columns: 1fr;
+  width: 100%;
+  align-items: center;
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 16px;
+  gap: 24px;
 
-  &.-is-header {
-    font-weight: 600;
-    text-align: center;
+  p {
+    line-height: 24px;
   }
 
-  div {
-    padding: 4px 8px;
-    border-top: 1px solid #bbb;
-    border-left: 1px solid #bbb;
+  @media (min-width: 640px) {
+    grid-template-columns: 3fr 1fr;
+    border-radius: 56px;
 
-    &.-is-action-group {
-      display: flex;
-
-      a {
-        flex: 1;
-        text-align: center;
-        cursor: pointer;
-      }
+    div {
+      padding: 8px 24px;
     }
+  }
+`
+
+const ActionGroup = styled.div`
+  display: flex;
+  justify-content: end;
+  gap: 24px;
+
+  a {
+    text-align: center;
+    cursor: pointer;
   }
 `

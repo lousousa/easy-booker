@@ -12,7 +12,7 @@ export default function BookingForm({ bookingId, onSave }: BookingFormProps) {
   const [checkInDate, setCheckInDate] = useState<Date | null>(null)
   const [checkOutDate, setCheckOutDate] = useState<Date | null>(null)
   const [intervalLock, setIntervalLock] = useState<{ start: Date; end: Date; } | null>(null)
-  const [price, setPrice] = useState<string>('-')
+  const [price, setPrice] = useState<string[]>([])
   const [excludeDateIntervals, setExcludeDateIntervals] = useState<{ start: Date; end: Date; }[]>([])
   const { data, setData } = useData()!
 
@@ -46,17 +46,17 @@ export default function BookingForm({ bookingId, onSave }: BookingFormProps) {
   }, [data])
 
   useEffect(() => {
-    if (placeId === 0 || !checkInDate || !checkOutDate) return setPrice('-')
+    if (placeId === 0 || !checkInDate || !checkOutDate) return setPrice([])
 
     const place = availablePlaces.find(place => place.id === placeId)
-    if (!place?.pricePerNight) return setPrice('-')
+    if (!place?.pricePerNight) return setPrice([])
 
     const differenceInDays = moment(checkOutDate).diff(moment(checkInDate), 'days')
 
     const priceText = `$${place.pricePerNight * differenceInDays}`
-    const priceDetails = differenceInDays > 1 ? ` ($${place.pricePerNight} x ${differenceInDays} nights)` : ' (1 night)'
+    const priceDetails = differenceInDays > 1 ? `($${place.pricePerNight} x ${differenceInDays} nights)` : '(1 night)'
 
-    setPrice(priceText + priceDetails)
+    setPrice([priceText, priceDetails])
   }, [placeId, checkInDate, checkOutDate])
 
   useEffect(() => {
@@ -142,18 +142,18 @@ export default function BookingForm({ bookingId, onSave }: BookingFormProps) {
         />
       </FormField>
 
-      <div />
-
       <FormField>
         <label>Price</label>
 
-        <p>{price}</p>
+        {price.length === 0 && <p>-</p>}
+
+        {price.length > 0 && <p><b>{price[0]}</b> {price[1]}</p>}
       </FormField>
 
       <div>
         <SubmitButton
           type="submit"
-          disabled={price === '-'}
+          disabled={price.length === 0}
         >
           Save
         </SubmitButton>
@@ -164,32 +164,49 @@ export default function BookingForm({ bookingId, onSave }: BookingFormProps) {
 
 const Form = styled.form`
   display: grid;
-  grid-template-columns: 1.25fr repeat(2, 1fr);
+  grid-template-columns: 1fr;
   align-items: end;
   width: 100%;
-  gap: 24px;
+  gap: 12px;
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 16px;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    padding: 24px;
+
+    > div:first-child {
+      grid-column: span 2;
+    }
+  }
 `
 
 const FormField = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  flex: 1;
+  width: 100%;
 
   input, select, p {
     width: 100%;
     margin-top: 4px;
     font-size: 16px;
     padding: 4px 0;
+    border-radius: 8px;
   }
 
   input, select {
-    padding: 4px 8px;
+    padding: 8px;
+    border: 1px solid #ddd;
   }
 `
 
 const SubmitButton = styled.button`
-  padding: 4px 8px;
+  padding: 8px;
   font-size: 16px;
   cursor: pointer;
   width: 100%;
+  border-radius: 16px;
+  border: 1px solid #ddd;
 `

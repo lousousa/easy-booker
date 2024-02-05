@@ -21,8 +21,9 @@ const Content = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  max-width: 1200px;
+  max-width: 688px;
   margin: 0 auto;
+  padding: 0 12px 48px;
 
   h1 {
     width: 100%;
