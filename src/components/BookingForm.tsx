@@ -3,7 +3,7 @@ import { useData } from './DataProvider'
 import styled from 'styled-components'
 import moment from 'moment'
 import DatePicker from 'react-datepicker'
-import { availablePlaces, saveBooking } from '../data-manager'
+import { availablePlaces, getPriceTextData, saveBooking } from '../data-manager'
 import { BookingFormProps } from '../types'
 import 'react-datepicker/dist/react-datepicker.min.css'
 
@@ -48,15 +48,7 @@ export default function BookingForm({ bookingId, onSave }: BookingFormProps) {
   const handlePriceOutput = () => {
     if (placeId === 0 || !checkInDate || !checkOutDate) return setPrice([])
 
-    const place = availablePlaces.find(place => place.id === placeId)
-    if (!place?.pricePerNight) return setPrice([])
-
-    const differenceInDays = moment(checkOutDate).diff(moment(checkInDate), 'days')
-
-    const priceText = `$${place.pricePerNight * differenceInDays}`
-    const priceDetails = differenceInDays > 1 ? `($${place.pricePerNight} x ${differenceInDays} nights)` : '(1 night)'
-
-    setPrice([priceText, priceDetails])
+    setPrice(getPriceTextData({ placeId, checkInDate, checkOutDate }))
   }
 
   const handleDatesIntervalLock = () => {

@@ -1,4 +1,5 @@
 import localForage from 'localforage'
+import moment from 'moment'
 
 import { Booking } from './types'
 
@@ -41,4 +42,19 @@ export const removeBooking = async (id: string) => {
   await localForage.setItem('bookings', updatedBookings)
 
   return updatedBookings
+}
+
+export const getPriceTextData = (
+  { placeId, checkInDate, checkOutDate }:
+    { placeId: number, checkInDate: Date, checkOutDate: Date }
+  ) => {
+  const place = availablePlaces.find(place => place.id === placeId)
+  if (!place) return []
+
+  const differenceInDays = moment(checkOutDate).diff(moment(checkInDate), 'days')
+
+  const priceText = `$${place.pricePerNight * differenceInDays}`
+  const priceDetails = differenceInDays > 1 ? `($${place.pricePerNight} x ${differenceInDays} nights)` : '(1 night)'
+
+  return [priceText, priceDetails]
 }

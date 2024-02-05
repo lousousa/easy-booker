@@ -1,7 +1,7 @@
 import moment from 'moment'
 import { useState } from 'react'
 import { useData } from './DataProvider'
-import { availablePlaces, removeBooking } from '../data-manager'
+import { availablePlaces, getPriceTextData, removeBooking } from '../data-manager'
 import styled from 'styled-components'
 import Modal from './Modal'
 import BookingForm from './BookingForm'
@@ -22,15 +22,7 @@ export default function BookingList() {
     const booking = data.find(booking => booking.id === id)
     if (!booking) return []
 
-    const place = availablePlaces.find(place => place.id === booking.placeId)
-    if (!place) return []
-
-    const differenceInDays = moment(booking.checkOutDate).diff(moment(booking.checkInDate), 'days')
-
-    const priceText = `$${place.pricePerNight * differenceInDays}`
-    const priceDetails = differenceInDays > 1 ? `($${place.pricePerNight} x ${differenceInDays} nights)` : '(1 night)'
-
-    return [priceText, priceDetails]
+    return getPriceTextData({...booking})
   }
 
   return (
