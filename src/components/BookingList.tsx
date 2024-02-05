@@ -17,10 +17,10 @@ export default function BookingList() {
 
   const getPriceText = (id: string) => {
     const booking = data.find(booking => booking.id === id)
-    if (!booking) return ''
+    if (!booking) return []
 
     const place = availablePlaces.find(place => place.id === booking.placeId)
-    if (!place) return ''
+    if (!place) return []
 
     const differenceInDays = moment(booking.checkOutDate).diff(moment(booking.checkInDate), 'days')
 

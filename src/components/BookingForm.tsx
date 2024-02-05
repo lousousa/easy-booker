@@ -16,18 +16,7 @@ export default function BookingForm({ bookingId, onSave }: BookingFormProps) {
   const [excludeDateIntervals, setExcludeDateIntervals] = useState<{ start: Date; end: Date; }[]>([])
   const { data, setData } = useData()!
 
-  useEffect(() => {
-    if (!bookingId) return
-
-    const currentBooking = data.find(booking => booking.id === bookingId)
-    if (!currentBooking) return
-
-    setPlaceId(currentBooking.placeId)
-    setCheckInDate(currentBooking.checkInDate)
-    setCheckOutDate(currentBooking.checkOutDate)
-  }, [])
-
-  useEffect(() => {
+  const handleExcludeDateIntervals = () => {
     const intervals: { start: Date; end: Date; }[] = []
 
     data.forEach(booking => {
@@ -43,9 +32,20 @@ export default function BookingForm({ bookingId, onSave }: BookingFormProps) {
     })
 
     setExcludeDateIntervals(intervals)
-  }, [data])
+  }
 
-  useEffect(() => {
+  const loadBookingById = () => {
+    if (!bookingId) return
+
+    const currentBooking = data.find(booking => booking.id === bookingId)
+    if (!currentBooking) return
+
+    setPlaceId(currentBooking.placeId)
+    setCheckInDate(currentBooking.checkInDate)
+    setCheckOutDate(currentBooking.checkOutDate)
+  }
+
+  const handlePriceOutput = () => {
     if (placeId === 0 || !checkInDate || !checkOutDate) return setPrice([])
 
     const place = availablePlaces.find(place => place.id === placeId)
@@ -57,14 +57,14 @@ export default function BookingForm({ bookingId, onSave }: BookingFormProps) {
     const priceDetails = differenceInDays > 1 ? `($${place.pricePerNight} x ${differenceInDays} nights)` : '(1 night)'
 
     setPrice([priceText, priceDetails])
-  }, [placeId, checkInDate, checkOutDate])
+  }
 
-  useEffect(() => {
+  const handleDatesIntervalLock = () => {
     if (!checkInDate) return setIntervalLock(null)
 
     const lock = excludeDateIntervals.find(interval => interval.start.getTime() > checkInDate.getTime())
     setIntervalLock(lock || null)
-  }, [checkInDate])
+  }
 
   const handleSubmit = async (ev: React.SyntheticEvent) => {
     ev.preventDefault()
@@ -80,6 +80,11 @@ export default function BookingForm({ bookingId, onSave }: BookingFormProps) {
 
     if (onSave) onSave()
   }
+
+  useEffect(loadBookingById, [])
+  useEffect(handleExcludeDateIntervals, [data])
+  useEffect(handlePriceOutput, [placeId, checkInDate, checkOutDate])
+  useEffect(handleDatesIntervalLock, [checkInDate])
 
   return (
     <Form
