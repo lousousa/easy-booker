@@ -44,29 +44,29 @@ export default function BookingList() {
         />
       </Modal>
 
-      <TextTitle>My bookings</TextTitle>
+      {data.length > 0 && (
+        <>
+          <TextTitle>My bookings</TextTitle>
 
-      <ListContainer>
-        {data.length === 0 && (
-          <TextMessage>You currently have no bookings.</TextMessage>
-        )}
+          <ListContainer>
+            {data.map(booking => (
+              <DataGrid key={'booking_item_' + booking.id}>
+                <div>
+                  <h2>{availablePlaces.find(place => place.id === booking.placeId)?.title}</h2>
+                  <p>{moment(booking.checkInDate).format('MM/DD/YYYY')} - {moment(booking.checkOutDate).format('MM/DD/YYYY')}</p>
+                  <p><b>{getPriceText(booking.id)[0]}</b> {getPriceText(booking.id)[1]}</p>
+                </div>
 
-        {data.map(booking => (
-          <DataGrid key={'booking_item_' + booking.id}>
-            <div>
-              <h2>{availablePlaces.find(place => place.id === booking.placeId)?.title}</h2>
-              <p>{moment(booking.checkInDate).format('MM/DD/YYYY')} - {moment(booking.checkOutDate).format('MM/DD/YYYY')}</p>
-              <p><b>{getPriceText(booking.id)[0]}</b> {getPriceText(booking.id)[1]}</p>
-            </div>
+                <ActionGroup>
+                  <a onClick={() => setBookingDetailsId(booking.id)}>Edit</a>
 
-            <ActionGroup>
-              <a onClick={() => setBookingDetailsId(booking.id)}>Edit</a>
-
-              <a onClick={() => removeItem(booking.id)}>Remove</a>
-            </ActionGroup>
-          </DataGrid>
-        ))}
-      </ListContainer>
+                  <a className='-is-danger' onClick={() => removeItem(booking.id)}>Remove</a>
+                </ActionGroup>
+              </DataGrid>
+            ))}
+          </ListContainer>
+        </>
+      )}
     </Content>
   )
 }
@@ -86,14 +86,10 @@ text-align: center;
 margin-bottom: 48px;
 `
 
-const TextMessage = styled.p`
-  text-align: center;
-`
-
 const ListContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 24px;
 `
 
 const DataGrid = styled.div`
@@ -101,10 +97,10 @@ const DataGrid = styled.div`
   grid-template-columns: 1fr;
   width: 100%;
   align-items: center;
-  border: 1px solid #ddd;
   padding: 12px;
   border-radius: 16px;
   gap: 24px;
+  background-color: #fff;
 
   p {
     line-height: 24px;

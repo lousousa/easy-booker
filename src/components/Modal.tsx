@@ -1,3 +1,4 @@
+import React from 'react'
 import ReactDOM from 'react-dom'
 import styled from 'styled-components'
 
@@ -6,9 +7,13 @@ import { ModalProps } from '../types'
 export default function Modal({ isOpen, onClose, children }: ModalProps) {
   if (!isOpen) return null
 
+  const handleContentClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation()
+  }
+
   return ReactDOM.createPortal(
-    <ModalOverlay>
-      <ModalContent>
+    <ModalOverlay onClick={onClose}>
+      <ModalContent onClick={handleContentClick}>
         <ButtonClose onClick={onClose}>Close</ButtonClose>
 
         {children}

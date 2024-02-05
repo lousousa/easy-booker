@@ -168,9 +168,9 @@ const Form = styled.form`
   align-items: end;
   width: 100%;
   gap: 12px;
-  border: 1px solid #ddd;
   padding: 12px;
   border-radius: 16px;
+  background-color: #fff;
 
   @media (min-width: 640px) {
     grid-template-columns: repeat(2, 1fr);
@@ -208,5 +208,13 @@ const SubmitButton = styled.button`
   cursor: pointer;
   width: 100%;
   border-radius: 16px;
-  border: 1px solid #ddd;
+  border: none;
+  font-weight: 600;
+  background-color: #1C93F3;
+  color: #fff;
+
+  &:disabled {
+    background-color: #F1F2F6;
+    color: #888;
+  }
 `

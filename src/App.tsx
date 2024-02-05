@@ -6,13 +6,15 @@ import styled from 'styled-components'
 function App() {
   return (
     <DataProvider>
-      <Content>
-        <h1>Easy Booker</h1>
+      <Container>
+        <Content>
+          <h1>Easy Booker</h1>
 
-        <BookingForm />
+          <BookingForm />
 
-        <BookingList />
-      </Content>
+          <BookingList />
+        </Content>
+      </Container>
     </DataProvider>
   )
 }
@@ -29,7 +31,13 @@ const Content = styled.div`
     width: 100%;
     text-align: center;
     margin: 48px 0;
+    font-size: 48px;
   }
+`
+
+const Container = styled.div`
+  background-color: #f8f7f9;
+  min-height: 100vh;
 `
 
 export default App
