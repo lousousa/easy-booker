@@ -81,6 +81,7 @@ export default function BookingForm({ bookingId, onSave }: BookingFormProps) {
   return (
     <Form
       onSubmit={handleSubmit}
+      data-testid="booking-form"
     >
       <FormField>
         <label>Where</label>
@@ -90,6 +91,7 @@ export default function BookingForm({ bookingId, onSave }: BookingFormProps) {
             setPlaceId(parseInt(ev.target.value, 10))
           }}
           value={placeId}
+          data-testid="form-place-select"
         >
           {placeId === 0 && (<option>- Please select -</option>)}
 
@@ -135,7 +137,7 @@ export default function BookingForm({ bookingId, onSave }: BookingFormProps) {
           minDate={moment(checkInDate).add(1, 'days').toDate()}
           maxDate={intervalLock?.start || null}
           excludeDateIntervals={excludeDateIntervals}
-          placeholderText='- Please select -'
+          placeholderText="- Please select -"
         />
       </FormField>
 
@@ -144,13 +146,14 @@ export default function BookingForm({ bookingId, onSave }: BookingFormProps) {
 
         {price.length === 0 && <p>-</p>}
 
-        {price.length > 0 && <p><b>{price[0]}</b> {price[1]}</p>}
+        {price.length > 0 && <p data-testid="form-price-message"><b>{price[0]}</b> {price[1]}</p>}
       </FormField>
 
       <div>
         <SubmitButton
           type="submit"
           disabled={price.length === 0}
+          data-testid="form-submit-button"
         >
           Save
         </SubmitButton>

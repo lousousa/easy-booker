@@ -8,7 +8,7 @@ function App() {
     <DataProvider>
       <Container>
         <Content>
-          <h1>Easy Booker</h1>
+          <h1 data-testid="page-title">Easy Booker</h1>
 
           <BookingForm />
 
