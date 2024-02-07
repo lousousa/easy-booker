@@ -1,5 +1,10 @@
 # Easy Booker
 
+[![react](https://badges.aleen42.com/src/react.svg)](https://badges.aleen42.com/src/react.svg)
+[![typescript](https://badges.aleen42.com/src/typescript.svg)](https://badges.aleen42.com/src/typescript.svg)
+[![vite](https://badges.aleen42.com/src/vitejs.svg)](https://badges.aleen42.com/src/vitejs.svg)
+[![eslint](https://badges.aleen42.com/src/eslint.svg)](https://badges.aleen42.com/src/eslint.svg)
+
 ## Introduction
 
 Easy Booker is a streamlined CRUD (Create, Read, Update, Delete) mobile-first web application designed specifically for managing hotel bookings. With a focus on simplicity and efficiency, it offers users the ability to create, list, read, update, and remove bookings directly from their browser, ensuring data persistence in the browser without the need for a backend.
