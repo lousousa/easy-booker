@@ -10,7 +10,10 @@ export const DataProvider = ({ children }: DataProviderProps) => {
 
   const loadData = async () => {
     const bookings = await localForage.getItem<Booking[]>('bookings')
-    if (bookings) setData(bookings)
+
+    if (!bookings) await localForage.setItem('bookings', [])
+
+    setData(bookings || [])
   }
 
   useEffect(() => { loadData() }, [])

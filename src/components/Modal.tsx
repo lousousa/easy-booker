@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { ModalProps } from '../types'
 
-export default function Modal({ isOpen, onClose, children }: ModalProps) {
+export default function Modal({ isOpen, onClose, children, dataTestid }: ModalProps) {
   if (!isOpen) return null
 
   const handleContentClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -12,7 +12,10 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
   }
 
   return ReactDOM.createPortal(
-    <ModalOverlay onClick={onClose}>
+    <ModalOverlay
+      data-testid={dataTestid}
+      onClick={onClose}
+    >
       <ModalContent onClick={handleContentClick}>
         <ButtonClose onClick={onClose}>Close</ButtonClose>
 

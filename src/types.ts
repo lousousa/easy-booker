@@ -19,7 +19,8 @@ export interface DataProviderProps {
 export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  children: ReactNode
+  children: ReactNode;
+  dataTestid?: string
 }
 
 export interface BookingDetailsProps {

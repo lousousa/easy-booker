@@ -26,10 +26,13 @@ export default function BookingList() {
   }
 
   return (
-    <Content>
+    <Content
+      data-testid="booking-list"
+    >
       <Modal
         isOpen={bookingDetailsId !== null}
         onClose={() => setBookingDetailsId(null)}
+        dataTestid="edit-modal"
       >
         <ModalTextTitle>Edit booking</ModalTextTitle>
 
@@ -42,13 +45,25 @@ export default function BookingList() {
       <Modal
         isOpen={removingId !== null}
         onClose={() => setRemovingId(null)}
+        dataTestid="confirmation-modal"
       >
         <ConfirmationModalContainer>
           <h3>Are you sure?</h3>
 
           <div>
-            <RemoveButton onClick={() => removeItem()}>Remove</RemoveButton>
-            <CancelButton onClick={() => setRemovingId(null)}>Cancel</CancelButton>
+            <ConfirmButton
+              onClick={() => removeItem()}
+              data-testid="modal-confirm-button"
+            >
+              Remove
+            </ConfirmButton>
+
+            <CancelButton
+              onClick={() => setRemovingId(null)}
+              data-testid="modal-cancel-button"
+            >
+              Cancel
+            </CancelButton>
           </div>
         </ConfirmationModalContainer>
       </Modal>
@@ -61,15 +76,30 @@ export default function BookingList() {
             {data.map(booking => (
               <DataGrid key={'booking_item_' + booking.id}>
                 <div>
-                  <h2>{availablePlaces.find(place => place.id === booking.placeId)?.title}</h2>
+                  <h2
+                    data-testid="item-text-title"
+                  >
+                    {availablePlaces.find(place => place.id === booking.placeId)?.title}
+                  </h2>
                   <p>{moment(booking.checkInDate).format('MM/DD/YYYY')} - {moment(booking.checkOutDate).format('MM/DD/YYYY')}</p>
                   <p><b>{getPriceText(booking.id)[0]}</b> {getPriceText(booking.id)[1]}</p>
                 </div>
 
                 <ActionGroup>
-                  <a onClick={() => setBookingDetailsId(booking.id)}>Edit</a>
+                  <a
+                    onClick={() => setBookingDetailsId(booking.id)}
+                    data-testid="item-edit-button"
+                  >
+                    Edit
+                  </a>
 
-                  <a className='-is-danger' onClick={() => setRemovingId(booking.id)}>Remove</a>
+                  <a
+                    className='-is-danger'
+                    onClick={() => setRemovingId(booking.id)}
+                    data-testid="item-remove-button"
+                  >
+                    Remove
+                  </a>
                 </ActionGroup>
               </DataGrid>
             ))}
@@ -164,7 +194,7 @@ const ConfirmationModalContainer = styled.div`
     font-weight: 600;
   }
 `
-const RemoveButton = styled.button`
+const ConfirmButton = styled.button`
   border: 1px solid #dd2d4a;
   color: #dd2d4a;
   background: none;
