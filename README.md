@@ -9,7 +9,9 @@
 
 Easy Booker is a streamlined CRUD (Create, Read, Update, Delete) mobile-first web application designed specifically for managing hotel bookings. With a focus on simplicity and efficiency, it offers users the ability to create, list, read, update, and remove bookings directly from their browser, ensuring data persistence in the browser without the need for a backend.
 
-![easy-booker](https://github.com/lousousa/easy-booker/assets/2921281/79bc675f-f185-46fe-a7bc-cf42d9c57c6c)
+## Preview
+
+![easy-booker](https://github.com/lousousa/easy-booker/assets/2921281/703037de-0573-414f-821c-947ab3fb6c60)
 
 ## Features
 
